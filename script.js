@@ -1,22 +1,17 @@
 let allQuest = [];
 
-// Ambil data pas pertama kali buka
-const questData = localStorage.getItem('dataQuest');
-if (questData) {
-    allQuest = JSON.parse(questData);
-    showQuest();
-}
+const clickSound = new Audio('tingsound.mp3');
+const deleteSound = new Audio('boomsfc.mp3');
+
+
+const inputQuest = document.getElementById('quest-input');
+const tombolTambah = document.getElementById('add-button');
+const daftarQuest = document.getElementById('quest-list');
 
 function saveData() {
     localStorage.setItem('dataQuest', JSON.stringify(allQuest));
 }
 
-const clickSound = new Audio('tingsound.mp3');
-const deleteSound = new Audio('boomsfc.mp3');
-
-const inputQuest = document.getElementById('quest-input');
-const tombolTambah = document.getElementById('add-button');
-const daftarQuest = document.getElementById('quest-list');
 
 function showQuest() {
     daftarQuest.innerHTML = '';
@@ -27,6 +22,7 @@ function showQuest() {
         // Kasih ID atau index supaya kita tau mana yang mau dihapus
         li.innerHTML = `
             <span>${item.teks}</span>
+            <span>${item.tanggal}</span>
             <button class="btn-hapus" onclick="hapusQuest(${index})">X</button>
         `;
         
@@ -44,8 +40,8 @@ function showQuest() {
 // Fungsi Tambah
 tombolTambah.addEventListener('click', () => {
     if (inputQuest.value === '') return; // Jangan tambah kalau kosong
-    
-    const newQuest = { teks: inputQuest.value, status: 'aktif' };
+    const date = new Date().toLocaleDateString('id-ID');
+    const newQuest = { teks: inputQuest.value, status: 'aktif', tanggal: date };
     allQuest.push(newQuest);
     saveData();
     showQuest(); // Gambar ulang biar sinkron
@@ -67,5 +63,12 @@ function hapusQuest(index) {
     deleteSound.currentTime = 0;
     deleteSound.play();
     saveData();
+    showQuest();
+}
+
+// Ambil data pas pertama kali buka
+const questData = localStorage.getItem('dataQuest');
+if (questData) {
+    allQuest = JSON.parse(questData);
     showQuest();
 }
